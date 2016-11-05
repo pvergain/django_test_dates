@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    'transactions'
+    'transactions',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

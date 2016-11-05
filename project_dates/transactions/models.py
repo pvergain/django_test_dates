@@ -43,7 +43,7 @@ class Transaction(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return "{} {}".format(self.sender, self.created)
 
 
     def get_absolute_url(self):

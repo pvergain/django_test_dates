@@ -118,7 +118,7 @@ Update the transactions/models.py module
 		)
 		
 		def __str__(self):
-			return self.name
+            return "{} {}".format(self.sender, self.created)
 
 
 		def get_absolute_url(self):
@@ -234,12 +234,251 @@ python manage.py migrate transactions
 	  Applying transactions.0001_initial... OK
 
 
+python manage.py showmigrations
+===============================
+
+::
+
+    (django_test_dates)assr38@vercors:~/Documents/django_test_dates/project_dates$ python manage.py showmigrations
+    
+::
+    
+	admin
+	 [X] 0001_initial
+	 [X] 0002_logentry_remove_auto_add
+	auth
+	 [X] 0001_initial
+	 [X] 0002_alter_permission_name_max_length
+	 [X] 0003_alter_user_email_max_length
+	 [X] 0004_alter_user_username_opts
+	 [X] 0005_alter_user_last_login_null
+	 [X] 0006_require_contenttypes_0002
+	 [X] 0007_alter_validators_add_error_messages
+	 [X] 0008_alter_user_username_max_length
+	contenttypes
+	 [X] 0001_initial
+	 [X] 0002_remove_content_type_name
+	sessions
+	 [X] 0001_initial
+	transactions
+	 [X] 0001_initial
+
+
+python manage.py --help
+========================
+
+::
+
+    (django_test_dates) project_dates$ python manage.py --help
+
+::
+
+	Type 'manage.py help <subcommand>' for help on a specific subcommand.
+
+	Available subcommands:
+
+	[auth]
+		changepassword
+		createsuperuser
+
+	[django]
+		check
+		compilemessages
+		createcachetable
+		dbshell
+		diffsettings
+		dumpdata
+		flush
+		inspectdb
+		loaddata
+		makemessages
+		makemigrations
+		migrate
+		sendtestemail
+		shell
+		showmigrations
+		sqlflush
+		sqlmigrate
+		sqlsequencereset
+		squashmigrations
+		startapp
+		startproject
+		test
+		testserver
+
+	[sessions]
+		clearsessions
+
+	[staticfiles]
+		collectstatic
+		findstatic
+		runserver
 
 
 
+python manage.py createsuperuser
+=================================
+
+::
+
+	Username (leave blank to use 'xx'): pvergain
+	Email address: pvergain@gmail.com
+	Password: 
+	Password (again): 
+	Superuser created successfully
+	
+
+The default urls.py module
+===========================
+
+.. code-block:: python
+   :linenos:
+   
+   
+	"""project_dates URL Configuration
+
+	The `urlpatterns` list routes URLs to views. For more information please see:
+		https://docs.djangoproject.com/en/1.10/topics/http/urls/
+	Examples:
+	Function views
+		1. Add an import:  from my_app import views
+		2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+	Class-based views
+		1. Add an import:  from other_app.views import Home
+		2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+	Including another URLconf
+		1. Import the include() function: from django.conf.urls import url, include
+		2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+	"""
+	from django.conf.urls import url
+	from django.contrib import admin
+
+	urlpatterns = [
+		url(r'^admin/', admin.site.urls),
+	]
 
 
+Update the transactions/admin.py module
+========================================
 
+.. code-block:: python
+   :linenos:
+   
+   
+    #!/usr/bin/python
+	# -*- coding: UTF-8 -*-
+	"""Transaction Administration.
+
+	"""
+
+	from django.contrib import admin
+
+	from .models import Transaction
+
+	@admin.register(Transaction)
+	class TransactionAdmin(admin.ModelAdmin):
+		"""Transaction administration
+
+		Documentation
+		=============
+
+		- https://docs.djangoproject.com/en/dev/ref/contrib/admin/#modeladmin-objects
+
+		"""
+        date_hierarchy = 'created'		
+		list_display = ('uid', 'sender', 'created')
+		search_fields = ('uid', 'sender', 'created')
+		list_filter = ('uid', 'sender', 'created')
+
+
+Run the local web server on 127.0.0.1:8002
+===========================================
+
+::
+
+	System check identified no issues (0 silenced).
+	November 05, 2016 - 18:59:50
+	Django version 1.10.3, using settings 'project_dates.settings'
+	Starting development server at http://127.0.0.1:8002/
+	Quit the server with CONTROL-C.
+		
+
+With Firefox go to 	http://127.0.0.1:8002/admin
+	
+
+.. figure:: add_transaction.png
+   :align: center
+
+
+.. figure:: django_admin.png
+   :align: center
+
+
+Next step : use pendulum with shell_plus
+==========================================
+
+.. seealso::
+
+   - https://django-extensions.readthedocs.io/en/latest/shell_plus.html#sql-queries
+   
+Prerequisites
+--------------
+
+.. seealso::
+
+   - :ref:`install_django_extensions`
+   - :ref:`install_ipython`
+
+   
+python manage.py shell_plus --print-sql
+----------------------------------------
+
+::
+      
+    (django_test_dates) project_dates$ python manage.py shell_plus --print-sql
+    
+::
+    
+	# Shell Plus Model Imports
+	from django.contrib.admin.models import LogEntry
+	from django.contrib.auth.models import Group, Permission, User
+	from django.contrib.contenttypes.models import ContentType
+	from django.contrib.sessions.models import Session
+	from transactions.models import Transaction
+	# Shell Plus Django Imports
+	from django.db import transaction
+	from django.conf import settings
+	from django.utils import timezone
+	from django.urls import reverse
+	from django.core.cache import cache
+	from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
+	Python 3.5.2 (default, Sep 10 2016, 08:21:44) 
+	Type "copyright", "credits" or "license" for more information.
+
+	IPython 5.1.0 -- An enhanced Interactive Python.
+	?         -> Introduction and overview of IPython's features.
+	%quickref -> Quick reference.
+	help      -> Python's own help system.
+	object?   -> Details about 'object', use 'object??' for extra details.
+
+	In [1]: 
+   
+::
+   
+    In [1]: l=Transaction.objects.all()
+
+::
+
+    In [2]: l
+
+::
+
+	Out[2]: SELECT "transactions_transaction"."id", "transactions_transaction"."uid", "transactions_transaction"."sender", "transactions_transaction"."created" FROM "transactions_transaction" LIMIT 21
+
+	Execution time: 0.000727s [Database: default]
+
+	<QuerySet [<Transaction: agence1 2016-11-05 19:07:28+00:00>]>
+	   
 
 
 
