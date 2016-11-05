@@ -1,8 +1,13 @@
 
 
 =============================================
-Django test dates
+Django test date times
 =============================================
+
+.. seealso::
+
+   - https://docs.djangoproject.com/en/dev/ref/models/querysets/#datetimes
+
 
 .. sidebar:: Dango test dates
 
@@ -19,3 +24,5 @@ Django test dates
 
 
    installation/installation
+   applications/applications
+   
