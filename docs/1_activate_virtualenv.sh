@@ -1,3 +1,4 @@
+#!/bin/bash
 
 
-workon sphinx_35
+workon sphinx3
