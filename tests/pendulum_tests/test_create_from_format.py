@@ -37,3 +37,10 @@ class CreateFromFormatTest(AbstractTestCase):
         self.assertPendulum(d, 1975, 5, 21, 22, 32, 11)
         self.assertIsInstanceOfPendulum(d)
         self.assertEqual('UTC', d.timezone_name)
+
+    def test_create_from_format_YYYY_MM_DD(self):
+        """Test a use case"""
+        d_utc = Pendulum.create_from_format('2016-11-06', '%Y-%m-%d', 'UTC')
+        self.assertEqual('UTC', d_utc.timezone_name)
+        self.assertPendulum(d_utc, 2016, 11, 6, 0, 0, 0)
+
