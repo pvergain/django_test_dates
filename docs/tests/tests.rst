@@ -6,13 +6,14 @@
 The tests
 ===================================
 
+.. contents::
+   :depth: 3
 
 Thanks to pendulum
 ===================
 
 
-
-workon test_ dates
+workon test_dates
 ===================
 
 

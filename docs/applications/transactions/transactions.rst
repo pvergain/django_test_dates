@@ -485,7 +485,11 @@ python manage.py shell_plus --print-sql
 issue 69
 =========
 
-.. seealso:: https://github.com/sdispater/pendulum/issues/69
+.. seealso:: 
+
+   - https://github.com/sdispater/pendulum/issues/69
+   - https://julien.danjou.info/blog/2015/python-and-timezones
+   - https://github.com/django/django/blob/master/django/utils/timezone.py
 
 
 ::
