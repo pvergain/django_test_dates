@@ -239,7 +239,7 @@ python manage.py showmigrations
 
 ::
 
-    (django_test_dates)assr38@vercors:~/Documents/django_test_dates/project_dates$ python manage.py showmigrations
+    (django_test_dates)pvergain@vercors:~/Documents/django_test_dates/project_dates$ python manage.py showmigrations
     
 ::
     
@@ -480,6 +480,50 @@ python manage.py shell_plus --print-sql
 	<QuerySet [<Transaction: agence1 2016-11-05 19:07:28+00:00>]>
 	   
 
+
+
+issue 69
+=========
+
+.. seealso:: https://github.com/sdispater/pendulum/issues/69
+
+
+::
+
+	I've changed the version to the latest(0.6.5), and problem solved.
+	it seems get another trouble.
+	When I use pendulum.utcnow() to store, it can be saved successfully, 
+	but when I try to get it, ValueError: Not naive datetime 
+	(tzinfo is already set) will occur.
+	Then I checked the data stored in MySQL, something is different 
+	between django.utils.timezone.now()'s value.
+
+		django.utils.timezone.now() = 2016-11-04 04:35:32.872716
+		pendulum.utcnow() = 2016-11-04T05:00:56.391080+00:00
+		pendulum.utcnow().to_datetime_string() = 2016-11-03 20:42:52
+
+	The 1st and 3rd solution can be used without any issue,
+	but the 3rd is not correct due to the timezone info.
+
+	How can I use it in a correct way?
+
+
+
+::
+
+	/home/pvergain/Envs/test_dates/lib/python3.5/site-packages/django/utils/timezone.py in make_aware(value, timezone, is_dst)
+		366     if hasattr(timezone, 'localize'):
+		367         # This method is available for pytz time zones.
+	--> 368         return timezone.localize(value, is_dst=is_dst)
+		369     else:
+		370         # Check that we won't overwrite the timezone of an aware datetime.
+
+	/home/pvergain/Envs/test_dates/lib/python3.5/site-packages/pytz/__init__.py in localize(self, dt, is_dst)
+		225         '''Convert naive time to local time'''
+		226         if dt.tzinfo is not None:
+	--> 227             raise ValueError('Not naive datetime (tzinfo is already set)')
+		228         return dt.replace(tzinfo=self)
+		229 
 
 
 
